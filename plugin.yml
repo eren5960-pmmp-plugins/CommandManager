@@ -1,0 +1,7 @@
+name: CommandManager
+version: 1
+api: 4.0.0
+main: Eren5960\CommandManager\CommandManager
+website: github.com/eren5960
+author: Eren5960
+description: a Command Manager
