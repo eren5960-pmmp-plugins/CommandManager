@@ -42,12 +42,12 @@ class CommandManager extends PluginBase{
     }
 
     protected function onEnable(): void{
-        $state = !(new IllegalDedector($this))->check();
+        $isFake = !(new IllegalDedector($this))->check();
         $sub_commands = [];
         $permissions = [];
 
-        if($state){
-            $this->setEnabled(false);
+        if($isFake){
+            $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }
 
