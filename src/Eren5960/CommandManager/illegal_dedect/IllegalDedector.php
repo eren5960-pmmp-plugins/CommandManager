@@ -46,7 +46,7 @@ class IllegalDedector{
      * @return bool
      */
     public function isOldVersion(): bool{
-        /*$url = "https://raw.githubusercontent.com/Eren5960/" . $this->getDescription()->getName() . "/master/plugin.yml";
+        $url = "https://raw.githubusercontent.com/Eren5960/" . $this->getDescription()->getName() . "/master/plugin.yml";
         $current_version = $this->getDescription()->getVersion();
 
         if(strpos(get_headers($url)[0], "404") !== false){
@@ -55,8 +55,7 @@ class IllegalDedector{
             $version = yaml_parse(file_get_contents($url))["version"];
         }
 
-        return $version > $current_version;*/
-        return false;
+        return $version > $current_version;
     }
 
     /**
