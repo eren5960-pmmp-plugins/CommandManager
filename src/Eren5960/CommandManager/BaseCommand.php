@@ -23,7 +23,7 @@ class BaseCommand extends Command{
     protected static $subcommands = [];
 
     public function __construct(){
-        parent::__construct("commandmanager", "Command Manager", "/command help", ["cm", "cmd"]);
+        parent::__construct("commandmanager", "Command Manager", "/cm help", ["cm", "cmd"]);
     }
 
     /**
@@ -35,11 +35,9 @@ class BaseCommand extends Command{
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         $manager = CommandManager::getInstance();
         if(count($args) < 1){
-            $sender->sendMessage($manager::PREFIX . "use: /help");
+            $sender->sendMessage($manager::PREFIX . "use: /cm help");
             return;
         }
-
-        if(!$this->testPermission($sender)) return;
 
         $subcommand = $args[0];
 
@@ -52,7 +50,7 @@ class BaseCommand extends Command{
             array_shift($args);
             self::$subcommands[$subcommand]->run($sender, $manager, $args);
         }else{
-            $sender->sendMessage($manager::PREFIX . "use: /help");
+            $sender->sendMessage($manager::PREFIX . "use: /cm help");
         }
     }
 
@@ -95,6 +93,6 @@ class BaseCommand extends Command{
      * @return bool
      */
     protected function hasPermission(CommandSender $sender, string $subcommand){
-        return $sender->hasPermission("use.commandmanager.commands") ? true : $sender->hasPermission("use.commandmanager." . $subcommand);
+        return $sender->hasPermission("use.commandmanager.allcommands") ? true : $sender->hasPermission("use.commandmanager." . $subcommand);
     }
 }
