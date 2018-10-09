@@ -12,3 +12,8 @@ a CommandManager Plugin for PocketMine-MP
 
 ## Features:
 - Otomatic disable command with config
+
+# TODO 1.2:
+- command blocker
+- subcommand blocker
+- command blocker in per world
