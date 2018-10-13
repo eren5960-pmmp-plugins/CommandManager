@@ -48,13 +48,29 @@ class IllegalDedector{
     public function isOldVersion(): bool{
         $url = "https://raw.githubusercontent.com/Eren5960/" . $this->getDescription()->getName() . "/master/plugin.yml";
         $current_version = $this->getDescription()->getVersion();
+        $stream = stream_context_create(
+            [
+                "ssl" => [
+                    "verify_peer" => false,
+                    "verify_peer_name" => false
+                ]
+            ]
+        );// for pmmp
 
-        if(strpos(get_headers($url)[0], "404") !== false){
+        try {
+            $header = get_headers($url, $stream);
+        } catch(\ErrorExpection $e) {
             return false;
-        }else{
-            $version = yaml_parse(file_get_contents($url))["version"];
+        } finally {
+            return false;
         }
 
+        if(strpos($header[0], "404") !== false){
+            return false;
+        }else{
+            $version = yaml_parse(file_get_contents($url, false, $stream))["version"];
+        }
+        
         return $version > $current_version;
     }
 
