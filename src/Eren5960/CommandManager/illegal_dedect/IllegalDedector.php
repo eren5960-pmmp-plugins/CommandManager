@@ -15,7 +15,7 @@ namespace Eren5960\CommandManager\illegal_dedect;
 
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginDescription;
-use pocketmine\utils\BinaryStream;
+use pocketmine\utils\TextFormat;
 
 class IllegalDedector{
     /** @var Plugin */
@@ -58,19 +58,14 @@ class IllegalDedector{
             ]
         );// for pmmp
 
-        try {
-            $header = get_headers($url, $stream);
-        } finally {
-            return false;
-        }
 
-        if(strpos($header[0], "404") !== false){
+        if(strpos(get_headers($url)[0], "404") !== false){
             return false;
         }else{
             $version = yaml_parse(file_get_contents($url, false, $stream))["version"];
         }
-        
-        return $version > $current_version;
+
+        return floatval($version) > floatval($current_version);
     }
 
     /**
@@ -98,7 +93,7 @@ class IllegalDedector{
         }
 
         if($this->isOldVersion()){
-            $this->plugin->getLogger()->info("CommandManager is old!, please update » github.com/eren5960/CommandManager");
+            $this->plugin->getLogger()->info(TextFormat::RED . "CommandManager is old!, please update » github.com/eren5960/CommandManager");
         }
 
         if($this->isFakeWebSite()){
