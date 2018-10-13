@@ -79,8 +79,8 @@ class BaseCommand extends Command{
      * @param BaseCommand $command
      * @throws SubcommandNotFoundExpection
      */
-    public static function registerSubcommand(BaseCommand $command){
-        if($command->getSubName() === null){
+    public static function registerSubcommand(BaseCommand $command): void{
+        if ($command->getSubName() === null) {
             throw new SubcommandNotFoundExpection(get_class($command));
         }
 

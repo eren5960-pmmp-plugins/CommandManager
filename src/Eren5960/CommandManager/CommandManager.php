@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Eren5960\CommandManager;
 
+use Eren5960\CommandManager\defaultsubcommands\CommandDisablePerWorld;
 use Eren5960\CommandManager\expections\CommandNotFoundExpection;
 use Eren5960\CommandManager\expections\SubcommandNotFoundExpection;
 use Eren5960\CommandManager\illegal_dedect\IllegalDedector;
@@ -52,10 +53,18 @@ class CommandManager extends PluginBase{
         }
 
         $this->provider->start();
+        (new EventListener())->init($this);
 
-        foreach ($this->getConfig()->getToRemoves() as $key => $name) {
+        foreach ($this->provider->getToDisablesEveryone() as $key => $name) {
             $this->disableCommandByName($name);
             $this->getLogger()->info(self::PREFIX . TextFormat::GOLD . $name . TextFormat::GREEN . " command disabled!");
+        }
+
+        foreach ($this->provider->getToDisablesPerWorld() as $world => $commands){
+            foreach ($commands as $command){
+                $this->disableCommandPerWorld($world, $command);
+                $this->getLogger()->info(self::PREFIX . TextFormat::GOLD . $command. TextFormat::GREEN . " command disabled in " . TextFormat::GOLD . $world);
+            }
         }
 
         /** @var BaseCommand $command */
@@ -139,5 +148,23 @@ class CommandManager extends PluginBase{
 
         $this->getCommandMap()->register("commandmanager", $this->provider->getCommands()[$name]);
         return self::COMMAND_ENABLED;
+    }
+
+    /**
+     * @param string $world
+     * @param string $command
+     * @return bool
+     */
+    public function disableCommandPerWorld(string $world, string $command): bool{
+        return $this->provider->addDisable($world, $command);
+    }
+
+    /**
+     * @param string $world
+     * @param string $command
+     * @return bool
+     */
+    public function enableCommandPerWorld(string $world, string $command): bool{
+        return $this->provider->delDisable($world, $command);
     }
 }

@@ -20,26 +20,35 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
 class DisableCommand extends BaseCommand{
-
     /**
      * @param CommandSender $sender
      * @param CommandManager $manager
      * @param array $args
      */
     public function run(CommandSender $sender, CommandManager $manager, array $args){
-        if(count($args) != 1){
-            $sender->sendMessage($manager::PREFIX . TextFormat::RED . "usage: /command disable command-name");
+        $command = $args[0];
+        if($command === null){
+            $sender->sendMessage($manager::PREFIX . TextFormat::RED . 'usage: /command disable command-name <world:optional>');
             return;
         }
 
-        try {
-            $state = $manager->disableCommandByName($args[0]);
+        if(empty($args[1])){
+            try {
+                $state = $manager->disableCommandByName($args[0]);
 
-            if($state){
-                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $args[0] . TextFormat::GREEN . " command disabled!");
+                if($state){
+                    $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command disabled!");
+                }
+            } catch (CommandNotFoundExpection $e){
+                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command not found!");
             }
-        } catch (CommandNotFoundExpection $e){
-            $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $args[0] . TextFormat::RED . " command not found!");
+        }else{
+            $state = $manager->disableCommandPerWorld($args[1], $command);
+            if($state){
+                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command disabled in " . $args[1]);
+            }else{
+                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command already disabled in " . $args[1]);
+            }
         }
     }
 

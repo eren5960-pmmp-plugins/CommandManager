@@ -15,6 +15,7 @@ namespace Eren5960\CommandManager\illegal_dedect;
 
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginDescription;
+use pocketmine\utils\BinaryStream;
 
 class IllegalDedector{
     /** @var Plugin */
@@ -59,8 +60,6 @@ class IllegalDedector{
 
         try {
             $header = get_headers($url, $stream);
-        } catch(\ErrorExpection $e) {
-            return false;
         } finally {
             return false;
         }

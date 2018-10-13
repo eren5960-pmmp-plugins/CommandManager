@@ -19,7 +19,14 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
 class HelpCommand extends BaseCommand{
+    /** @var string  */
+    const ONE_STAR = "*";
 
+    /**
+     * @param CommandSender $sender
+     * @param CommandManager $manager
+     * @param array $args
+     */
     public function run(CommandSender $sender, CommandManager $manager, array $args){
         $prefix = $manager::PREFIX;
         $t = TextFormat::BOLD . str_repeat("-", 10);
@@ -31,7 +38,7 @@ class HelpCommand extends BaseCommand{
          * @var BaseCommand $command
          */
         foreach (self::$subcommands as $name => $command){
-            $sender->sendMessage(TextFormat::GOLD . "* " . TextFormat::AQUA . "/command " . TextFormat::RESET . $command->getSubName() . " : " . TextFormat::LIGHT_PURPLE . $command->getSubDescription());
+            $sender->sendMessage(TextFormat::GOLD . self::ONE_STAR . " " . TextFormat::AQUA . "/command " . TextFormat::RESET . $command->getSubName() . " : " . TextFormat::LIGHT_PURPLE . $command->getSubDescription());
         }
 
         $sender->sendMessage($t . $prefix . $t);

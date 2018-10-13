@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Eren5960\CommandManager\providers;
 
 use Eren5960\CommandManager\CommandManager;
+use Eren5960\CommandManager\defaultsubcommands\CommandDisablePerWorld;
 use Eren5960\CommandManager\defaultsubcommands\EnableCommand;
 use Eren5960\CommandManager\defaultsubcommands\DisableCommand;
 use Eren5960\CommandManager\defaultsubcommands\HelpCommand;
@@ -24,9 +25,13 @@ class Provider extends Config{
     /** @var CommandManager */
     private $plugin;
     /** @var string[] */
-    private $toRemoves = [];
+    private $toDisablesEveryone = [];
+    private $toDisablesPerWorld = [];
     /** @var Command[] */
     private $cloudCommands = [];
+    /** @var int  */
+    const TO_EVERYONE = 1;
+    const TO_PER_REMOVE = 2;
 
     /**
      * Provider constructor.
@@ -38,28 +43,41 @@ class Provider extends Config{
     }
 
     public function start(): void{
-        if(!$this->__isset("toOtomaticDisables")){
-            $this->set("toOtomaticDisables", ["version", "help"]);
+        if(!$this->__isset("toEveryoneDisables")){
+            $this->set("toEveryoneDisables", ["version", "help"]);
+        }
+
+        if(!$this->__isset("disablePerWorld")){
+            $this->set("disablePerWorld", ["lobby" => ["fly", "jump"]]);
         }
 
         $this->save();
-        $this->toRemoves = $this->getAll();
+        $this->toDisablesEveryone = $this->gets(self::TO_EVERYONE);
+        $this->toDisablesPerWorld = $this->gets(self::TO_PER_REMOVE);
         $this->cloudCommands  = $this->plugin->getServer()->getCommandMap()->getCommands();
     }
 
+
     /**
-     * @param bool $force
-     * @return array
+     * @param int $type
+     * @return array|null
      */
-    public function getAll(bool $force = false): array{
-        return $this->get("toOtomaticDisables");
+    public function gets(int $type): ?array{
+        return $type == self::TO_EVERYONE ? $this->get("toEveryoneDisables") : ($type == self::TO_PER_REMOVE ? $this->get("disablePerWorld") : null);
     }
 
     /**
      * @return string[]
      */
-    public function getToRemoves(): array{
-        return $this->toRemoves;
+    public function getToDisablesEveryone(): array{
+        return $this->toDisablesEveryone;
+    }
+
+    /**
+     * @return array
+     */
+    public function getToDisablesPerWorld(): array{
+        return $this->toDisablesPerWorld;
     }
 
     /**
@@ -67,6 +85,46 @@ class Provider extends Config{
      */
     public function getCommands(): array{
         return $this->cloudCommands;
+    }
+
+    /**
+     * @param string $world
+     * @param string $command
+     * @return bool
+     */
+    public function addDisable(string $world, string $command): bool{
+        if(empty($this->toDisablesPerWorld[$world])){
+            goto set;
+        }
+
+        if(array_search($command, $this->toDisablesPerWorld[$world]) !== false){
+            return false;
+        }
+
+        set:
+        $this->toDisablesPerWorld[$world][] = $command;
+        return true;
+    }
+
+    /**
+     * @param string $world
+     * @param string $command
+     * @return bool
+     */
+    public function delDisable(string $world, string $command): bool{
+        if(empty($this->toDisablesPerWorld[$world])){
+            return false;
+        }
+
+        $k = array_search($command, $this->toDisablesPerWorld[$world]);
+
+        if($k === false){
+            return false;
+        }
+
+        unset($this->toDisablesPerWorld[$world][$k]);
+
+        return true;
     }
 
     /**
