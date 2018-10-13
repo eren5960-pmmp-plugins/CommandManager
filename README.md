@@ -11,8 +11,8 @@ Default commands:
 • /cmd
 
 Default sub commands:
-• /cm enable command-name world-name=optional
-• /cm disable command-name world-name=optional
+• /cm enable commandName worldName=optional
+• /cm disable commandName worldName=optional
 • /cm help
 
 Features:
