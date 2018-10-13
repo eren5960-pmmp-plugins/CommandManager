@@ -9,8 +9,8 @@ Hit : [![HitCount](http://hits.dwyl.io/Eren5960/CommandManager.svg)](http://hits
 - /cmd
 
 #### Default sub commands:
-- /cm enable <command-name> <world=optional>
-- /cm disable <command-name> <world=optional>
+- /cm enable <commandname> <world=optional>
+- /cm disable <commandname> <world=optional>
 - /cm help
 
 #### Features:
