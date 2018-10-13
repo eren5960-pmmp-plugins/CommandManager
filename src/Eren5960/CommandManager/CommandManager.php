@@ -32,16 +32,16 @@ class CommandManager extends PluginBase{
     /** @var string  */
     const PREFIX = "§e│ §bCommandManager §e│§r ";
     /** @var int  */
-    const COMMAND_NOT_FOUND = 0;
-    const COMMAND_ALREADY_ENABLED = 1;
-    const COMMAND_ENABLED = 2;
+    public const COMMAND_NOT_FOUND = 0;
+    public const COMMAND_ALREADY_ENABLED = 1;
+    public const COMMAND_ENABLED = 2;
 
-    protected function onLoad(): void{
+    public function onLoad(): void{
         $this->provider = new Provider($this);
         self::$instance = $this;
     }
 
-    protected function onEnable(): void{
+    public function onEnable(): void{
         $isFake = !(new IllegalDedector($this))->check();
         $sub_commands = [];
         $permissions = [];

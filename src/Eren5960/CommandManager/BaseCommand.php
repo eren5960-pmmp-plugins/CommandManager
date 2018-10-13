@@ -71,7 +71,7 @@ class BaseCommand extends Command{
     /**
      * @return string
      */
-    protected function getSubDescription(): string{
+    public function getSubDescription(): string{
         return "No description given.";
     }
 

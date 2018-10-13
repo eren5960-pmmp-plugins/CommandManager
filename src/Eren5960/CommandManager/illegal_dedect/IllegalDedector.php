@@ -50,7 +50,7 @@ class IllegalDedector{
         $current_version = $this->getDescription()->getVersion();
 
         if(strpos(get_headers($url)[0], "404") !== false){
-            $version = 0;
+            return false;
         }else{
             $version = yaml_parse(file_get_contents($url))["version"];
         }
