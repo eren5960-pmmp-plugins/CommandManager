@@ -1,9 +1,9 @@
 name: CommandManager
-version: 1
-api:
-  - 3.0.0
-  - 4.0.0
+version: 1.1
+api: 4.0.0
 main: Eren5960\CommandManager\CommandManager
 website: github.com/eren5960
 author: Eren5960
 description: a Command Manager
+
+#perms auto init by CommandManager->onEnable()
