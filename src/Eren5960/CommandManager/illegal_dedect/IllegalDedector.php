@@ -16,6 +16,7 @@ namespace Eren5960\CommandManager\illegal_dedect;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginDescription;
 use pocketmine\utils\TextFormat;
+use pocketmine\utils\Internet;
 
 class IllegalDedector{
     /** @var Plugin */
@@ -49,21 +50,8 @@ class IllegalDedector{
     public function isOldVersion(): bool{
         $url = "https://raw.githubusercontent.com/Eren5960/" . $this->getDescription()->getName() . "/master/plugin.yml";
         $current_version = $this->getDescription()->getVersion();
-        $stream = stream_context_create(
-            [
-                "ssl" => [
-                    "verify_peer" => false,
-                    "verify_peer_name" => false
-                ]
-            ]
-        );// for pmmp
+        $version = yaml_parse(Internet::getURL($url))["version"];
 
-
-        if(strpos(get_headers($url)[0], "404") !== false){
-            return false;
-        }else{
-            $version = yaml_parse(file_get_contents($url, false, $stream))["version"];
-        }
 
         return floatval($version) > floatval($current_version);
     }
