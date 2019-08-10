@@ -1,6 +1,6 @@
 name: CommandManager
-version: 1.1
-api: 4.0.0
+version: 1.2
+api: [3.8.2, 3.8.3, 3.9.0]
 main: Eren5960\CommandManager\CommandManager
 website: github.com/eren5960
 author: Eren5960

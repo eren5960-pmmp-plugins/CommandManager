@@ -34,20 +34,19 @@ class BaseCommand extends Command{
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         $manager = CommandManager::getInstance();
-        if(count($args) < 1){
+        if(empty($args)){
             $sender->sendMessage($manager::PREFIX . "use: /cm help");
             return;
         }
 
-        $subcommand = $args[0];
+        $subcommand = array_shift($args);
 
         if(!$this->hasPermission($sender, $subcommand)){
             $sender->sendMessage($manager::PREFIX . TextFormat::DARK_PURPLE . "you have not permission!");
             return;
         }
 
-        if(isset(self::$subcommands[$subcommand])){
-            array_shift($args);
+        if(array_key_exists($subcommand, self::$subcommands)){
             self::$subcommands[$subcommand]->run($sender, $manager, $args);
         }else{
             $sender->sendMessage($manager::PREFIX . "use: /cm help");

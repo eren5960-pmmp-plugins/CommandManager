@@ -25,13 +25,14 @@ class EnableCommand extends BaseCommand{
      * @param array $args
      */
     protected function run(CommandSender $sender, CommandManager $manager, array $args){
-        $command = $args[0];
-        if($command === null) {
+        $command = array_shift($args);
+        if(is_null($command)) {
             $sender->sendMessage($manager::PREFIX . TextFormat::RED . "usage: /command enable command-name");
             return;
         }
 
-        if(empty($args[1])){
+        $world = array_shift($args);
+        if(is_null($world)){
             $state = $manager->enableCommandByName($command);
 
             switch ($state){
@@ -39,19 +40,16 @@ class EnableCommand extends BaseCommand{
                     $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command already enable!");
                     break;
                 case $manager::COMMAND_NOT_FOUND:
-                    $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command not found in plugins and PocketMine-MP!");
+                    $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command not found in plugins and " . \pocketmine\NAME . "!");
                     break;
                 case $manager::COMMAND_ENABLED:
                     $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command enabled!");
                     break;
             }
+        }elseif($manager->enableCommandPerWorld($world, $command)){
+            $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command enabled!");
         }else{
-            $state = $manager->enableCommandPerWorld($args[1], $command);
-            if($state){
-                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command enabled!");
-            }else{
-                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command already enabled!");
-            }
+            $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command already enabled!");
         }
     }
 

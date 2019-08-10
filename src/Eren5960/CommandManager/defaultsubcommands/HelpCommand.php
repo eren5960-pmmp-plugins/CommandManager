@@ -28,10 +28,9 @@ class HelpCommand extends BaseCommand{
      * @param array $args
      */
     public function run(CommandSender $sender, CommandManager $manager, array $args){
-        $prefix = $manager::PREFIX;
-        $t = TextFormat::BOLD . str_repeat("-", 10);
+        $title = TextFormat::BOLD . str_repeat("-", 10) . $manager::PREFIX . TextFormat::BOLD . str_repeat("-", 10);
 
-        $sender->sendMessage($t . $prefix . $t);
+        $sender->sendMessage($title);
 
         /**
          * @var string $name
@@ -41,7 +40,7 @@ class HelpCommand extends BaseCommand{
             $sender->sendMessage(TextFormat::GOLD . self::ONE_STAR . " " . TextFormat::AQUA . "/command " . TextFormat::RESET . $command->getSubName() . " : " . TextFormat::LIGHT_PURPLE . $command->getSubDescription());
         }
 
-        $sender->sendMessage($t . $prefix . $t);
+        $sender->sendMessage($title);
     }
 
     /**

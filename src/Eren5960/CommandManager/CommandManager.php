@@ -26,16 +26,17 @@ use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 class CommandManager extends PluginBase{
+	 /** @var int  */
+    public const COMMAND_NOT_FOUND = 0;
+    public const COMMAND_ALREADY_ENABLED = 1;
+    public const COMMAND_ENABLED = 2;
+    
     /** @var Provider */
     private $provider;
     /** @var CommandManager */
     private static $instance;
     /** @var string  */
     const PREFIX = "§e│ §bCommandManager §e│§r ";
-    /** @var int  */
-    public const COMMAND_NOT_FOUND = 0;
-    public const COMMAND_ALREADY_ENABLED = 1;
-    public const COMMAND_ENABLED = 2;
 
     public function onLoad(): void{
         $this->provider = new Provider($this);
@@ -63,7 +64,7 @@ class CommandManager extends PluginBase{
         foreach ($this->provider->getToDisablesPerWorld() as $world => $commands){
             foreach ($commands as $command){
                 $this->disableCommandPerWorld($world, $command);
-                $this->getLogger()->info(self::PREFIX . TextFormat::GOLD . $command. TextFormat::GREEN . " command disabled in " . TextFormat::GOLD . $world);
+                $this->getLogger()->info(self::PREFIX . TextFormat::GOLD . $command. TextFormat::GREEN . " command disabled for " . TextFormat::GOLD . $world);
             }
         }
 
@@ -142,7 +143,7 @@ class CommandManager extends PluginBase{
             return self::COMMAND_ALREADY_ENABLED;
         }
 
-        if(!isset($this->provider->getCommands()[$name])){
+        if(!array_key_exists($name, $this->provider->getCommands())){
             return self::COMMAND_NOT_FOUND;
         }
 

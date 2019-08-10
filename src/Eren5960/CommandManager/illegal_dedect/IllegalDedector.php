@@ -17,6 +17,7 @@ use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginDescription;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\Internet;
+use pocketmine\utils\InternetExpection;
 
 class IllegalDedector{
     /** @var Plugin */
@@ -50,10 +51,16 @@ class IllegalDedector{
     public function isOldVersion(): bool{
         $url = "https://raw.githubusercontent.com/Eren5960/" . $this->getDescription()->getName() . "/master/plugin.yml";
         $current_version = $this->getDescription()->getVersion();
-        $version = yaml_parse(Internet::getURL($url))["version"];
 
-
-        return floatval($version) > floatval($current_version);
+        $err = '';
+        $content = Internet::getURL($url, 10, [], $err);
+        if(empty($err)){
+            $version = yaml_parse($content)["version"];
+            return floatval($version) > floatval($current_version);
+        }else{
+            $this->plugin->getLogger()->alert(substr($err, 0, 9) === "Could not" ? "You haven't internet connection for check CommandManager version." : $error);
+            return false;
+        }
     }
 
     /**

@@ -26,29 +26,25 @@ class DisableCommand extends BaseCommand{
      * @param array $args
      */
     public function run(CommandSender $sender, CommandManager $manager, array $args){
-        $command = $args[0];
-        if($command === null){
+        $command = array_shift($args);
+        if(is_null($command)){
             $sender->sendMessage($manager::PREFIX . TextFormat::RED . 'usage: /command disable command-name <world:optional>');
             return;
         }
 
-        if(empty($args[1])){
+        $world = array_shift($args);
+        if(is_null($world)){
             try {
-                $state = $manager->disableCommandByName($args[0]);
-
-                if($state){
+                if($manager->disableCommandByName($command)){
                     $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command disabled!");
                 }
             } catch (CommandNotFoundExpection $e){
                 $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command not found!");
             }
+        }elseif($manager->disableCommandPerWorld($world, $command)){
+            $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command disabled for " . $world);
         }else{
-            $state = $manager->disableCommandPerWorld($args[1], $command);
-            if($state){
-                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::GREEN . " command disabled in " . $args[1]);
-            }else{
-                $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command already disabled in " . $args[1]);
-            }
+            $sender->sendMessage($manager::PREFIX . TextFormat::GOLD . $command . TextFormat::RED . " command already disabled for " . $world);
         }
     }
 

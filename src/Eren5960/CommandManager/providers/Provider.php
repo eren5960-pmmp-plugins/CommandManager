@@ -54,7 +54,9 @@ class Provider extends Config{
         $this->save();
         $this->toDisablesEveryone = $this->gets(self::TO_EVERYONE);
         $this->toDisablesPerWorld = $this->gets(self::TO_PER_REMOVE);
-        $this->cloudCommands  = $this->plugin->getServer()->getCommandMap()->getCommands();
+        foreach ($this->plugin->getServer()->getCommandMap()->getCommands() as $name => $command) {
+            $this->cloudCommands[$name] = $command;
+        }
     }
 
 
@@ -93,17 +95,16 @@ class Provider extends Config{
      * @return bool
      */
     public function addDisable(string $world, string $command): bool{
-        if(empty($this->toDisablesPerWorld[$world])){
-            goto set;
+        if(!array_key_exists($world, $this->toDisablesPerWorld)){
+            $this->toDisablesPerWorld[$world] = [];
         }
 
-        if(array_search($command, $this->toDisablesPerWorld[$world]) !== false){
-            return false;
+        if(!array_key_exists($command, $this->toDisablesPerWorld[$world])){
+            $this->toDisablesPerWorld[$world][$command] = $command;
+            return true;
         }
 
-        set:
-        $this->toDisablesPerWorld[$world][] = $command;
-        return true;
+        return false;
     }
 
     /**
@@ -112,19 +113,12 @@ class Provider extends Config{
      * @return bool
      */
     public function delDisable(string $world, string $command): bool{
-        if(empty($this->toDisablesPerWorld[$world])){
-            return false;
+        if(isset($this->toDisablesPerWorld[$world][$command])){
+            unset($this->toDisablesPerWorld[$world][$command]);
+            return true;
         }
 
-        $k = array_search($command, $this->toDisablesPerWorld[$world]);
-
-        if($k === false){
-            return false;
-        }
-
-        unset($this->toDisablesPerWorld[$world][$k]);
-
-        return true;
+        return false;
     }
 
     /**
