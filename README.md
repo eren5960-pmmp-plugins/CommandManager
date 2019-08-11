@@ -1,34 +1,24 @@
 
-# CommandManager
+# CommandManager 1.2
 
-a CommandManager Plugin for PocketMine-MP
+Manage your commands in PocketMine-MP
 
 Hit : [![HitCount](http://hits.dwyl.io/Eren5960/CommandManager.svg)](http://hits.dwyl.io/Eren5960/CommandManager)
 
-#### Default commands:
 
-- /commandmanager
+## Command prefix:
+- /commandmanager (/cm of alias)
 
-- /cm
-
-- /cmd
-
-#### Default sub commands:
-
-- /cm enable commandName worldName=optional
-
-- /cm disable commandName worldName=optional
+## Default subcommands:
+##### Enable an command
+/cm <enable> <string: commandName> <string: worldName=optional>
+##### Disable an command
+ /cm <disable> <string: commandName> <string: worldName=optional>
 
 - /cm help
 
-#### Features:
+## Features:
 
-- when server starting, disable commands (with config)
+- Edit config.yml for disable commands when plugin enabling
 
-- disable/enable command in game 
-
-- disable/enable command per world in game
-
-#### TODO 1.2:
-
-- subcommand blocker
+- Disable or Enable an command in game (with per world feature)
